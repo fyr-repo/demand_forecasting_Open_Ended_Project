@@ -13,7 +13,7 @@ Huge Thanks to [Dr. Arka Prokash Mazumdar](https://mnit.ac.in/dept_cse/profile?f
 
 Outcome: This project greatly exposed on how to formulate a given problem, find the appropriate resources and datasets to solve the problem, how to handle datasets of large sizes using dask and MySQL and how to analyse and come up with a deep learning solution and how to simulate the solution. 
 
-[Server Request and Demand Graphs](https://github.com/fyr-repo/demand_forecasting_Open_Ended_Project/blob/main/server-demand.png)
+![Server Request and Demand Graphs](https://github.com/fyr-repo/demand_forecasting_Open_Ended_Project/blob/main/server-demand.png)
 
 ---
 
