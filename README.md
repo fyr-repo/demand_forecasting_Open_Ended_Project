@@ -36,9 +36,9 @@ Paper[2] In this paper, a comprehensive literature review of existing machine le
 
 Paper[3] This paper presents DeepScaler, a deep learning-based holistic autoscaling approach for microservices that focus on coping with service dependencies to optimize service-level agreements (SLA) assurance and cost efficiency of containers.
 
-[1] C. Meng, S. Song, H. Tong, M. Pan and Y. Yu, "DeepScaler: Holistic Autoscaling for Microservices Based on Spatiotemporal GNN with Adaptive Graph Learning," in 2023 38th IEEE/ACM International Conference on Automated Software Engineering (ASE), Luxembourg, Luxembourg, 2023 pp. 53-65. doi: 10.1109/ASE56229.2023.00038
-[2] Zhong, Zhiheng, and Xu, Minxian, et al. "Machine Learning-based Orchestration of Containers: A Taxonomy and Future Directions". ACM COMPUTING SURVEYS, vol.54,no.10S, 2022, pp. 35-. doi:10.1145/3510415
-[3] L. Toka, G. Dobreff, B. Fodor and B. Sonkoly, "Machine Learning-Based Scaling Management for Kubernetes Edge Clusters," in IEEE Transactions on Network and Service Management, vol. 18, no. 1, pp. 958-972, March 2021, doi: 10.1109/TNSM.2021.3052837.
+[1] C. Meng, S. Song, H. Tong, M. Pan and Y. Yu, "DeepScaler: Holistic Autoscaling for Microservices Based on Spatiotemporal GNN with Adaptive Graph Learning," in 2023 38th IEEE/ACM International Conference on Automated Software Engineering (ASE), Luxembourg, Luxembourg, 2023 pp. 53-65. doi: 10.1109/ASE56229.2023.00038       
+[2] Zhong, Zhiheng, and Xu, Minxian, et al. "Machine Learning-based Orchestration of Containers: A Taxonomy and Future Directions". ACM COMPUTING SURVEYS, vol.54,no.10S, 2022, pp. 35-. doi:10.1145/3510415       
+[3] L. Toka, G. Dobreff, B. Fodor and B. Sonkoly, "Machine Learning-Based Scaling Management for Kubernetes Edge Clusters," in IEEE Transactions on Network and Service Management, vol. 18, no. 1, pp. 958-972, March 2021, doi: 10.1109/TNSM.2021.3052837.        
 
 
 Problem formulation (in bullet points):
@@ -60,7 +60,7 @@ requests, apply appropriate time formatting, what kind and amount of containers 
 5. Deployment on GitHub
 
 Software/Hardware/ Dataset Requirements:
-Software Stack: Keras, Scikit Learn, Kubernetes Orchestration Engine (Docker, Minikube), python, jupyterlab, MySQL(for storing the large dataset), Dask
-Languages: Javascript, Python, SQL
+Software Stack: Keras, Scikit Learn, Kubernetes Orchestration Engine (Docker, Minikube), python, jupyterlab, MySQL(for storing the large dataset), Dask     
+Languages: Javascript, Python, SQL      
 Dataset: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3QBYB5 Network Simulation: I want to focus on the implementation of the Forecasting method using LSTM Neural Network with implementation on containers and hence want to keep the simulation part as simple as possible. For this instead of using a network simulator like ns3, I will run two basic http servers and pass http headers from one to another replicating the client and server model. Based on these headers, the model will read and forecast the demand of containers (nodes and compute engines)
 
