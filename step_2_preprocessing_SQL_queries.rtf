@@ -1,0 +1,167 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\csgray\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 \
+\ul SQL Query to Create new Table\ulnone \
+\
+CREATE TABLE raw_dataset (\
+request_IP VARCHAR(30), \
+aux_1 VARCHAR(100), \
+aux_2 VARCHAR(100), \
+request_timestamp VARCHAR(30), \
+request_timestamp_region VARCHAR(10), \
+request_whole VARCHAR(1000), \
+request_method VARCHAR(1000), \
+requested_URL VARCHAR(1000), \
+request_status VARCHAR(100), \
+requested_bytes VARCHAR(10), \
+requested_UserAgent VARCHAR(1000), \
+aux_3 VARCHAR(1000), \
+aux_4 VARCHAR(1000)\
+);\
+\
+\
+\ul Path to CSV file\ulnone \
+\
+/Users/fyrozdadapeer/Desktop/IIITKota Mtech Course work/3. Coursework/6. Open Ended Project/Project Files/access.log.csv\
+\
+\ul Terminal line to start mysql that can read files\ulnone \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\fs24 /usr/local/mysql/bin/mysql -uroot -p \'97 Use this to open a MySQL in terminal
+\fs22 \
+/usr/local/mysql/bin/mysql
+\fs24  --local-infile=1 -u root -p\
+\
+\
+NOTE:\
+\ul aux_1\ulnone , \ul aux_2\ulnone  - are only filled with - and thus are redundant columns\
+(aux_2 - is only to distinguish client and admin)\
+\ul request_timestamp_region\ulnone  - also the same in all columns and hence can be ignored\
+\ul request_method\ulnone  - has no values and can also be ignored\
+\ul request_status - \ulnone  Lets skip this also since this is not giving \
+\ul requested_UserAgent \ulnone - No need for this also since type of device that is requesting does not have relevance with the time series projection of request\
+\ul aux_4\ulnone  - can\'92t really say what this column is representing\
+Removed \ul aux_3\ulnone  since no of sources is just 10% of the total dataset\
+- Considering using aux_3 to show the source of the request - the assumption here is that if we know the source from which request is made, there may be some inference that given a new request - there maybe large no of requests and there maybe less no of requests if the user is already on the website\
+\
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\ul \ulc2 Query to insert IP address\ulnone \
+\
+INSERT INTO formatted_dataset (IP) SELECT request_IP FROM raw_dataset;\
+\
+\ul Query to extract date and time\ulnone \
+\
+INSERT INTO testing_bed (request_date, request_time) \
+SELECT  \
+STR_TO_DATE( SUBSTRING_INDEX(SUBSTRING(request_timestamp, 2), ':', 1), '%d/%b/%Y' ) \
+AS request_date,\
+\pard\pardeftab720\partightenfactor0
+CAST(SUBSTRING(request_timestamp, LOCATE(':', request_timestamp) + 1) AS TIME) \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+AS request_time \
+\
+FROM raw_dataset \
+LIMIT 10;\
+\
+\
+\ul Query to extract day of week\
+\
+\ulnone UPDATE testing_bed SET request_day_of_week = DAYNAME(request_date);\
+\
+\ul Query to extract day month year from date\ulnone \
+\
+UPDATE testing_bed SET request_day = DAY(request_date), request_month = MONTH(request_date), request_year = YEAR(request_date);\
+\
+\ul Query to extract hour, minute and second from time\ulnone \
+\
+UPDATE testing_bed SET request_hour = HOUR(request_time), request_minute = MINUTE(request_time), request_second = SECOND(request_time);\
+\
+\ul Query to extract type of server - image, filter, product \ulnone from requested_URL\
+\
+>>> SUBSTRING_INDEX(SUBSTRING_INDEX(your_column, '/', 2), '/', -1) AS text_between_slashes\
+\
+\'97\'97> Now just copy type_of_server from raw_dataset to formatted_dataset\
+\
+NOTE: we are considering GET and POST request as the same since both will take the same amount of bandwidth\
+\
+NOTE: request_whole and requested_URL gives the same information so using requested_URL for getting type of server\
+\
+\ul Query to extract no of bytes requested from requested_bytes\ulnone \
+\
+>>> \
+\
+\'97\'97> This also we can just copy from raw_dataset to formatted_dataset\
+\
+\ul Query to extract the type and the cumulative number of server requests made\ulnone \
+\
+!! This will later be used for data analysis\
+\
+>>> SELECT type_of_server, COUNT(*) as number_of_times FROM raw_dataset GROUP BY type_of_server ORDER BY number_of_times ASC;\
+\
+\'97\
+\
+\
+\
+Reason for considering large no of rows - the requests are very small which represent the incoming requests \
+\'97 Why training on this particular dataset - this mimics the input that we are getting from the backend server - from which the model can read\
+\
+\
+\
+NOTE: The data is only for 1 year of 2019 and only 1 month of January and in a span of 5 days (22-26) 22 3:00 am to 26th 8:00pm - Total 114 Hours of Data - 1 Hour is not complete - so 1 hour of data removed\
+\
+\
+\
+\'97 Next calculate total amount of data transferred and average data transferred and put it inside the cumulative graph\
+\
+- Also draw a separate column calculating the time difference between each request and time difference between new IP addresses\
+\
+- You can also draw a separate column for no of bytes difference between each request\
+\
+\'97 Also try to comprehend LSTM deep learning model with respect to this model.\
+\
+\'97\'97 So after this - export this data to csv and then use dask for analysis of data - based on this analysis - you will set the parameters for the clusters\
+\
+After this analysis - start with model training\
+\
+After model training - start with initialising a cluster \
+\
+\
+\
+\
+The website name is zanbil_ir\
+\
+\
+NOTES - FOR DATA ANALYSIS\
+\
+SELECT request_hour, COUNT(*) as number_of_requests FROM formatted_dataset GROUP BY request_hour ORDER BY number_of_requests ASC\
+\'97 We can do hourly data for analysis - No of requests made in specific hours of time in a day - its clearly showing that it peaks at afternoon noon\
+\
+\
+\'97 SELECT request_hour, request_date,  COUNT(*) as number_of_requests FROM formatted_dataset GROUP BY request_hour, request_date ORDER BY number_of_requests ASC \
+^^ This query will give us the maximum and minimum no of requests that happened during the day\
+\
+\
+Question is - we can just create a simple system where the model scales as per our data analysis incrementally throughout our day and gets reduced during the night -\
+Yes we can do that - but what we are trying to do is achieve more efficiency by keeping it dynamic and based on the previous data\
+\
+You have to emphasise about this project using the amount of data transferred, amount of computation and this in terms of no of servers and images required between peak and low\
+\
+Also - surges is during errors in pricing and during DDOS attacks - those are the only places where we see a sudden surge in requests\
+\
+However - this idea will be particularly be helpful in case of streaming services such as during World Cup or a cricket match or a live show, where, the no of users that watch simultaneously increases exponentially.\
+\
+\
+Why are you removing features? Why can\'92t we just apply PCA?\
+- Because PCA just checks variance and retains features with high features. Whereas here we are applying domain knowledge to remove the features. \
+\
+}
